@@ -26,8 +26,10 @@ class MouseCard():
         
 
 class Card():
-    def __init__(self, value, x_axis=0, y_axis=0, z_axis=0):
-        self.value = value
+    def __init__(self, suit, number, x_axis=0, y_axis=0, z_axis=0):
+        self.suit = suit
+        self.number = number
+        self.value = (suit, number)
         self.color = (240,240,200)
         self.x = x_axis
         self.y = y_axis
@@ -76,13 +78,16 @@ class Card():
             Screen.screen.blit(self._text, self._textrect)
         else:
             pygame.draw.rect(Screen.screen, self._facedown_color, [self.x, self.y,self.width,self.height], 2)
+    
+    
+
 
 
 class Deck():
     def __init__(self):
         self.suits = ("spades", "hearts","clubs","diamonds")
         self.numbers = ("a","2","3","4","5","6","7","8","9","10","j","q","k")
-        self.deck = [[Card((i,j)) for j in self.suits for i in self.numbers]]
+        self.deck = [[Card(i,j) for j in self.suits for i in self.numbers]]
         self.ordered_deck = tuple(self.deck)
 
     def fiftytwo_pickup(self):

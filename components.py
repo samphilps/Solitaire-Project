@@ -7,4 +7,3 @@ class Screen():
     FPS = 24
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode(SCREENSIZE)
-    
