@@ -1,6 +1,7 @@
 import pygame
 from components import Screen
 import random
+pygame.font.init()
 
 class MouseCard():
     def __init__(self):
@@ -25,17 +26,17 @@ class MouseCard():
         
 
 class Card():
-    def __init__(self, value, z_axis=0):
+    def __init__(self, value, x_axis=0, y_axis=0, z_axis=0):
         self.value = value
         self.color = (240,240,200)
-        self.x = 50
-        self.y = 50
+        self.x = x_axis
+        self.y = y_axis
         self.z = z_axis
-        self._general_size = 16
+        self._general_size = 30
         self.width = int(self._general_size * 2.25)
         self.height = int(self._general_size * 3.5)
         self.fixed = False
-        self.face_up = True
+        self.face_up = False
         self._curr_down = None
         self._font = pygame.font.Font("freesansbold.ttf",20)
         self._facedown_color = (40,40,190)
@@ -68,18 +69,18 @@ class Card():
             self.y += mp[1]
 
     def show(self):
-        pygame.draw.rect(Screen.screen, self.color, [self.x,self.y,self.width,self.height])
+        pygame.draw.rect(Screen.screen, self.color, [self.x, self.y,self.width,self.height])
         if self.face_up:
-            pygame.draw.rect(Screen.screen, self._accent_color, [self.x,self.y,self.width,self.height], 2)
-            self._textrect.center = ((self.x+self.width/2),self.y+self.height/2)
+            pygame.draw.rect(Screen.screen, self._accent_color, [self.x, self.y,self.width,self.height], 2)
+            self._textrect.center = ((self.x + self.width/2), self.y + self.height/2)
             Screen.screen.blit(self._text, self._textrect)
         else:
-            pygame.draw.rect(Screen.screen, self._facedown_color, [self.x,self.y,self.width,self.height], 2)
+            pygame.draw.rect(Screen.screen, self._facedown_color, [self.x, self.y,self.width,self.height], 2)
 
 
 class Deck():
     def __init__(self):
-        self.suits = ("hearts","clubs","diamonds","spades")
+        self.suits = ("spades", "hearts","clubs","diamonds")
         self.numbers = ("a","2","3","4","5","6","7","8","9","10","j","q","k")
         self.deck = [[Card((i,j)) for j in self.suits for i in self.numbers]]
         self.ordered_deck = tuple(self.deck)

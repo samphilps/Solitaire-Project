@@ -30,6 +30,7 @@ class Game():
         }
         Screen.screen.fill(Screen.SCREENCOLOR)
         t.draw_foundation()
+        t.draw_tableau()
         while True:
             
             m.set_curr(pygame.mouse.get_pos())
@@ -42,8 +43,8 @@ class Game():
                 for c in range(len(d.deck[stack])):
                     pass
                     #d.deck[stack][c].show()
-
             
             pygame.display.flip()
             Screen.clock.tick(Screen.FPS)
             m.set_prev(m.curr)
+            
