@@ -12,6 +12,7 @@ class Game():
     def _quit_game(self):
         pygame.quit()
         return None
+    
 
     def run(self):
         click_num = 0
@@ -31,17 +32,7 @@ class Game():
             pygame.QUIT : self._quit_game
         }
         Screen.screen.fill(Screen.SCREENCOLOR)
-        t.draw_foundation()
-        t.draw_tableau()
-        t.draw_stock()
-
-        d.deck.pop(0)
-        d.deck.append(t.foundation)
-        d.deck.append(t.tableau)
-        d.deck.append(t.stock)
-        d.deck.append(t.waste)
-        
-        #t.draw_waste(t.stock)
+        t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
         
         # GAME LOOP -------------------------------------------
         while True:
@@ -49,19 +40,31 @@ class Game():
             mouse_x = mouse_presses[0]
             mouse_y = mouse_presses[1]
             
-            m.set_curr(pygame.mouse.get_pos())
-
             for event in pygame.event.get():
                 if event.type in func_dict:
                     func_dict[event.type]()
             
             if click_num == 0:
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    t.check_card_click(mouse_x, mouse_y, d.deck)
-                    click_num = 1
+                    for a in range(len(d.deck)):
+                        for b in range(len(d.deck[a])):
+                            card = d.deck[a][b]
+                            if type(card) == Card:
+                                if t.click_box(mouse_x, mouse_y, card.width, card.height, card.x, card.y):
+                                    if card in t.stock:
+                                        t.draw_waste(t.stock, t.waste)
+                                    if len(t.stock) == 0:
+                                        t.reset_stock(t.stock, t.waste)
+                                    click_num = 1
+                                    break
 
             if event.type == pygame.MOUSEBUTTONUP:
                 click_num = 0
+                
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_LEFT:
+            #         t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
+            #         t.reset_stock(t.stock, t.waste)
 
             # for stack in range(len(d.deck)):
             #     for c in range(len(d.deck[stack])):

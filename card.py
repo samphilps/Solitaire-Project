@@ -30,9 +30,11 @@ class Card():
         self.suit = suit
         self.number = number
         self.value = (suit, number)
-        self.color = (240,240,200)
+        self._faceup_color = (240,240,200)
+        self._suit_dict = {"spades" : "♠", "hearts" : "♥", "clubs" : "♣", "diamonds":"◆"}
         self.x = x_axis
         self.y = y_axis
+        self.coords = (self.x, self.y)
         self.z = z_axis
         self._general_size = 30
         self.width = int(self._general_size * 2.25)
@@ -40,11 +42,17 @@ class Card():
         self.fixed = False
         self.face_up = False
         self._curr_down = None
-        self._font = pygame.font.Font("freesansbold.ttf",20)
-        self._facedown_color = (40,40,190)
-        self._accent_color = (40,40,40) if self.value[1]=="clubs"or self.value[1]=="spades"else (190,40,40)
-        self._text = self._font.render(self.value[0]+self.value[1][0],True,self._accent_color)
-        self._textrect = self._text.get_rect()
+        self._corner_font = pygame.font.SysFont("segoeuisymbol",15)
+        self._suit_font = pygame.font.SysFont("segoeuisymbol", 50)
+        self._corner_text = self.value[1]+self.value[0][0]
+        self._facedown_color = (176,185,245)
+        self._facedown_border = (40,40,190)
+        self._accent_color = (40,40,40) if self.value[0]=="clubs"or self.value[0]=="spades"else (190,40,40)
+        
+        self._suit_text = self._suit_font.render(self._suit_dict[self.suit],True,self._accent_color)
+        self._suit_textrect = self._suit_text.get_rect()
+        self._cornernum_text = self._corner_font.render(self.value[1]+self._suit_dict[self.suit],True,self._accent_color)
+        self._cornernum_textrect = self._cornernum_text.get_rect()
     
     def set_z(self, value:int):
         self.z = value
@@ -71,13 +79,19 @@ class Card():
             self.y += mp[1]
 
     def show(self):
-        pygame.draw.rect(Screen.screen, self.color, [self.x, self.y,self.width,self.height])
+        
         if self.face_up:
+            pygame.draw.rect(Screen.screen, self._faceup_color, [self.x, self.y,self.width,self.height])
             pygame.draw.rect(Screen.screen, self._accent_color, [self.x, self.y,self.width,self.height], 2)
-            self._textrect.center = ((self.x + self.width/2), self.y + self.height/2)
-            Screen.screen.blit(self._text, self._textrect)
+            #------------------------------------------------------------------------
+            self._suit_textrect.center = ((self.x + self.width/2), self.y + self.height/2)
+            Screen.screen.blit(self._suit_text, self._suit_textrect)
+            self._cornernum_textrect.center = ((self.x + 16), (self.y + 10))
+            Screen.screen.blit(self._cornernum_text, self._cornernum_textrect)
+            #------------------------------------------------------------------------
         else:
-            pygame.draw.rect(Screen.screen, self._facedown_color, [self.x, self.y,self.width,self.height], 2)
+            pygame.draw.rect(Screen.screen, self._facedown_color, [self.x, self.y,self.width,self.height])
+            pygame.draw.rect(Screen.screen, self._facedown_border, [self.x, self.y,self.width,self.height], 2)
     
     
 
@@ -86,8 +100,8 @@ class Card():
 class Deck():
     def __init__(self):
         self.suits = ("spades", "hearts","clubs","diamonds")
-        self.numbers = ("a","2","3","4","5","6","7","8","9","10","j","q","k")
-        self.deck = [[Card(i,j) for j in self.suits for i in self.numbers]]
+        self.numbers = ("A","2","3","4","5","6","7","8","9","10","J","Q","K")
+        self.deck = [[Card(j,i) for j in self.suits for i in self.numbers]]
         self.ordered_deck = tuple(self.deck)
 
     def fiftytwo_pickup(self):

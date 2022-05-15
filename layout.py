@@ -10,11 +10,23 @@ class Table():
         self.stock = []
         self.x = 50
         self.y = 50
+        self.stock_coord = (883, 50)
         self._general_size = 30
         self.width = int(self._general_size * 2.25)
         self.height = int(self._general_size * 3.5)
         self.generic_card = Card('spades', 'a')
         self.stack_dict = {"foundation": 0, "tableau": 1, "stock": 2, "waste":  3}
+        
+    def draw_screen(self, deck, foundation, tableau, stock, waste):
+        self.draw_foundation()
+        self.draw_tableau()
+        self.draw_stock()
+
+        deck.pop(0)
+        deck.append(foundation)
+        deck.append(tableau)
+        deck.append(stock)
+        deck.append(waste)
 
     def draw_foundation(self):
         self.stack = []
@@ -45,6 +57,7 @@ class Table():
                 distance = card.width + seperator
                 x_loc += distance
                 self.tableau.append(card)
+                card.set_z(self.tableau.index(card))
             
             index_num += range_num
             range_num -= 1
@@ -56,39 +69,55 @@ class Table():
         cards_left = 23
         for a in range(24):
             index = (cards_left + 28)
-            self.stock.insert(0, (Deck().deck[0][index]))
             suit = Deck().deck[0][index].suit
             num = Deck().deck[0][index].number
             y_loc = self.y
             x_loc = Screen().SCREENWIDTH - (y_loc + self.generic_card.width)
             card = Card(suit, num, x_axis=x_loc, y_axis=y_loc)
-            card.show()
+            self.stock.insert(0, card)
+            card.set_z(cards_left)
             cards_left -= 1
 
-    def draw_waste(self, stock_list):
+        card.show()
+    
+    
+    def draw_waste(self, stock_list, waste_list):
         subtract_number = 200
-        for a in range(3):
-            x_loc = Screen().SCREENWIDTH - 50
-            card = stock_list[a]
+        if len(stock_list) >= 3:
+            range_num = 3
+        else:
+            range_num = len(stock_list)
+        for a in range(range_num):
+            x_loc = Screen().SCREENWIDTH - 60
+            card = stock_list[0]
             card.face_up = True
             card.y = 50
             card.x = x_loc - subtract_number
             card.show()
-            subtract_number -= 25
-    
+            stock_list.remove(card)
+            waste_list.insert(0, card)
+            subtract_number -= 30
+        
     def click_box(self, mouse_x, mouse_y, card_width, card_height, card_x, card_y):
-        if (mouse_x <= card_width) and (mouse_x >= card_x):
-            if (mouse_y <= card_width) and (mouse_y >= card_height):
+        if (mouse_x >= card_x) and (mouse_x <= card_x + card_width):
+            if (mouse_y >= card_y) and (mouse_y <= card_y + card_height):
                 return True
 
-    def check_card_click(self, x, y, stack_list):
-        for a in range(len(stack_list)):
-            for b in range(len(stack_list[a])):
-                card = stack_list[a][b]
-                print(card.x)
-                # if self.click_box(x, y, card.width, card.height, card.x_axis, card.y_axis):
-                #     print(card.suit)
+    def reset_stock(self, stock_list, waste_list):
+        range_num = len(waste_list)
+        for a in range(range_num):
+            current_card = waste_list[0]
+            current_card.x = self.stock_coord[0]
+            current_card.y = self.stock_coord[1]
+            current_card.face_up = False
+            stock_list.insert(0, current_card)
+            waste_list.remove(current_card)
+            
+        self.draw_stock
+        
+    # def hit_box(self, mouse_x, mouse_y):
+    #     if (mouse_x >= self.stock_coord[0]) and (mouse_x <= self.stock_coord[0] + self.generic_card.width):
+    #         if (mouse_y >= self.stock_coord[1]) and (mouse_y <= self.stock_coord[1] + self.generic_card.width):
+    #             return True
 
 t = Table()
-
-
