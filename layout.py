@@ -9,9 +9,9 @@ class Table():
         self.tableau = [[],[],[],[],[],[],[]]
         self.foundation = [[],[],[],[]]
         self.stock = []
-        self.x = 50
+        self.found_x = 50
         self.y = 50
-        self.stock_coord = (883, 50)
+        self.stock_coords = (883, 50)
         self._general_size = 30
         self.width = int(self._general_size * 2.25)
         self.height = int(self._general_size * 3.5)
@@ -33,11 +33,11 @@ class Table():
         deck.append(waste)
         
     def draw_foundation(self):
-        self.x = 50
+        self.found_x = 50
         for a in range(len(self.foundation)):
             if len(self.foundation[a]) == 0:
-                py.draw.rect(Screen.screen, (48, 122, 72), [self.x, self.y, self.width, self.height])
-                self.x += (40 + self.width)
+                py.draw.rect(Screen.screen, (48, 122, 72), [self.found_x, self.y, self.width, self.height])
+                self.found_x += (40 + self.width)
 
     def create_tableau(self, deck):
         range_num = 7
@@ -47,6 +47,13 @@ class Table():
         x_loc = (Screen().SCREENWIDTH - disgusting_equation)/2
         y_loc = 200
         mult = 1
+        
+        # for a in range(len(self.tableau)):
+        #     place_holder = py.draw.rect(Screen.screen, (48, 122, 72), [x_loc, y_loc, self.width, self.height])
+        #     self.tableau[a].append(place_holder)
+        #     x_loc += ((self.generic_card.width + seperator) * mult)
+        #     mult += 1
+
         
         for i in range(7):
             
@@ -72,10 +79,15 @@ class Table():
             for b in range(len(self.tableau[a])):
                 tableau_length += (b+1)
         
+        x_dict = {0:292.5, 1:379.5, 2:466.5, 3:553.5, 4:640.5, 5:727.5, 6:814.5}
+
         index = 0
+        y_val = 200
         for ii in range(tableau_length):
             for a in range(len(self.tableau)):
-                if a + index < 7:
+                if len(self.tableau[a]) == 0:
+                    py.draw.rect(Screen.screen, (48, 122, 72), [x_dict[a], y_val, self.width, self.height])
+                elif a + index < 7:
                     card = self.tableau[a + index][index]
                     card.show()
             index += 1
@@ -141,24 +153,46 @@ class Table():
         
             
         
-    def click_box(self, mouse_x, mouse_y, card_width, card_height, card_x, card_y):
-        if (mouse_x >= card_x) and (mouse_x <= card_x + card_width):
-            if (mouse_y >= card_y) and (mouse_y <= card_y + card_height):
+    def click_box(self, mouse_x, mouse_y, width, height, object_x, object_y):
+        if (mouse_x >= object_x) and (mouse_x <= object_x + width):
+            if (mouse_y >= object_y) and (mouse_y <= object_y + height):
                 return True
 
     def reset_stock(self, stock_list, waste_list):
         range_num = len(waste_list)
         for a in range(range_num):
             current_card = waste_list[0]
-            current_card.x = self.stock_coord[0]
+            current_card.x = self.stock_coords[0]
             current_card.face_up = False
             stock_list.append(current_card)
             waste_list.remove(current_card)
             
         
     def stock_check(self, mouse_x, mouse_y):
-        if (mouse_x >= self.stock_coord[0]) and (mouse_x <= self.stock_coord[0] + self.generic_card.width):
-            if (mouse_y >= self.stock_coord[1]) and (mouse_y <= self.stock_coord[1] + self.generic_card.height):
-                return True
+        return self.click_box(mouse_x, mouse_y, self.generic_card.width, self.generic_card.height, self.stock_coords[0], self.stock_coords[1])
+    
+    def card_check(self, mouse_x, mouse_y, card_stack):
+        range_num = len(card_stack)
+        for a in range(len(card_stack)):
+            if type(card_stack[a]) == list:
+                range_num = len(card_stack[a])
+                if range_num > 0:
+                    for b in range(range_num):
+                        card = card_stack[a][range_num - 1]
+                        if self.click_box(mouse_x, mouse_y, card.width, card.height, card.x, card.y):
+                            print(card.value)
+                            return True
+                        range_num -= 1
+            
+            elif type(card_stack[a]) == Card:
+                
+                card = card_stack[range_num - 1]
+                if self.click_box(mouse_x, mouse_y, card.width, card.height, card.x, card.y):
+                    print(card.value)
+                    return True
+                range_num -= 1
+
+            else:
+                return False
 
 t = Table()

@@ -57,13 +57,22 @@ class Game():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if t.stock_check(mouse_x, mouse_y):
                         t.update_waste(t.stock, t.waste)
-                    for a in range(len(d.deck)):
-                        for b in range(len(d.deck[a])):
-                            card = d.deck[a][b]
-                            if type(card) == Card:
-                                if t.click_box(mouse_x, mouse_y, card.width, card.height, card.x, card.y):
-                                    click_num = 1
-                                    break
+                        click_num = 1
+                    elif t.card_check(mouse_x, mouse_y, t.tableau):
+                        click_num = 1
+                    elif t.card_check(mouse_x, mouse_y, t.waste):
+                        click_num = 1
+                    elif t.card_check(mouse_x, mouse_y, t.foundation):
+                        click_num = 1
+
+                    # for a in range(len(d.deck)):
+                    #     for b in range(len(d.deck[a])):
+                    #         card = d.deck[a][b]
+                    #         if type(card) == Card:
+                    #             if t.click_box(mouse_x, mouse_y, card.width, card.height, card.x, card.y):
+                    #                 print(card.value)
+                    #                 click_num = 1
+                    #                 break
 
             if event.type == pygame.MOUSEBUTTONUP:
                 click_num = 0
