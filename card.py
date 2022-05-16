@@ -92,15 +92,11 @@ class Card():
         else:
             pygame.draw.rect(Screen.screen, self._facedown_color, [self.x, self.y,self.width,self.height])
             pygame.draw.rect(Screen.screen, self._facedown_border, [self.x, self.y,self.width,self.height], 2)
-    
-    
-
-
 
 class Deck():
     def __init__(self):
         self.suits = ("spades", "hearts","clubs","diamonds")
-        self.numbers = ("A","2","3","4","5","6","7","8","9","10","J","Q","K")
+        self.numbers = ("A","2","3","4","5","6","7","8","9","10","J","Q", "K")
         self.deck = [[Card(j,i) for j in self.suits for i in self.numbers]]
         self.ordered_deck = tuple(self.deck)
 

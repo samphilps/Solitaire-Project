@@ -36,7 +36,7 @@ class Game():
         # GAME LOOP -------------------------------------------
         
         t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
-
+        
         while True:
             Screen.screen.fill(Screen.SCREENCOLOR)
 

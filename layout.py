@@ -1,8 +1,7 @@
-from ssl import PEM_cert_to_DER_cert
 import pygame as py
 from components import Screen
 import random
-from card import Card, Deck
+from card import Card
 
 class Table():
     def __init__(self):
@@ -32,14 +31,6 @@ class Table():
         deck.append(tableau)
         deck.append(stock)
         deck.append(waste)
-
-    # def create_foundation(self):
-    #     self.stack = []
-    #     for a in range(4):
-    #         stack = py.draw.rect(Screen.screen, (48, 122, 72), [self.x, self.y, self.width, self.height])
-    #         self.stack.append(stack)
-    #         self.foundation.append(self.stack)
-    #         self.stack = []
         
     def draw_foundation(self):
         self.x = 50
@@ -66,8 +57,8 @@ class Table():
                     card.face_up = True
                 distance = card.width + seperator
                 x_loc += distance
-                self.tableau[j].append(card)
-                card.set_z(self.tableau[j].index(card))
+                self.tableau[j - range_num].append(card)
+                card.set_z(self.tableau[j - range_num].index(card))
             
             index_num += range_num
             range_num -= 1
@@ -76,15 +67,22 @@ class Table():
             mult += 1
 
     def draw_tableau(self):
-        range_num = len(self.tableau)
-        for a in range(range_num):
+        tableau_length = 0
+        for a in range(len(self.tableau)):
             for b in range(len(self.tableau[a])):
-                self.tableau[a][0].show()
+                tableau_length += (b+1)
+        
+        index = 0
+        for ii in range(tableau_length):
+            for a in range(len(self.tableau)):
+                if a + index < 7:
+                    card = self.tableau[a + index][index]
+                    card.show()
+            index += 1
 
     def create_stock(self, deck):
         cards_left = 23
-        
-
+    
         for a in range(24):
             index = (cards_left + 28)
             suit = deck[0][index].suit
@@ -95,8 +93,6 @@ class Table():
             self.stock.insert(0, card)
             card.set_z(cards_left)
             cards_left -= 1
-
-
 
     def draw_stock(self, stock_list):
         range_num = len(stock_list)
@@ -117,7 +113,6 @@ class Table():
             range_num = len(stock_list)
 
         for a in range(range_num):
-            print(f"\n{range_num}\n")
             card = stock_list[0]
             waste_list.append(card)
             stock_list.remove(card)
