@@ -1,3 +1,4 @@
+from ssl import PEM_cert_to_DER_cert
 import pygame as py
 from components import Screen
 from card import Card, Deck
@@ -18,9 +19,9 @@ class Table():
         self.stack_dict = {"foundation": 0, "tableau": 1, "stock": 2, "waste":  3}
         
     def draw_screen(self, deck, foundation, tableau, stock, waste):
-        self.draw_foundation()
-        self.draw_tableau()
-        self.draw_stock()
+        self.create_foundation()
+        self.create_tableau()
+        self.create_stock()
 
         deck.pop(0)
         deck.append(foundation)
@@ -28,7 +29,7 @@ class Table():
         deck.append(stock)
         deck.append(waste)
 
-    def draw_foundation(self):
+    def create_foundation(self):
         self.stack = []
         for a in range(4):
             stack = py.draw.rect(Screen.screen, (48, 122, 72), [self.x, self.y, self.width, self.height])
@@ -37,7 +38,15 @@ class Table():
             self.foundation.append(self.stack)
             self.stack = []
         
-    def draw_tableau(self):
+    def draw_foundation(self):
+        range_num = len(self.foundation)
+
+        for a in range(range_num):
+            card = self.foundation[a]
+            if type(card) == Card:
+                card.show()
+
+    def create_tableau(self):
         range_num = 7
         index_num = 0
         seperator = 20
@@ -53,7 +62,6 @@ class Table():
                 card = Card(card_id.suit, card_id.number, x_axis=x_loc, y_axis=y_loc)
                 if j == 0:
                     card.face_up = True
-                card.show()
                 distance = card.width + seperator
                 x_loc += distance
                 self.tableau.append(card)
@@ -65,8 +73,18 @@ class Table():
             y_loc += 20
             mult += 1
 
-    def draw_stock(self):
+    def draw_tableau(self):
+        range_num = len(self.tableau)
+        for a in range(range_num):
+            self.tableau[a].show()
+
+    def create_stock(self):
         cards_left = 23
+        reset_text = self.generic_card._suit_font.render("⟳",True,(0,0,0))
+        reset_textrect = reset_text.get_rect()
+        reset_textrect.center = ((883 + self.generic_card.width/2), 50 + self.generic_card.height/2)
+        Screen.screen.blit(reset_text, reset_textrect)
+
         for a in range(24):
             index = (cards_left + 28)
             suit = Deck().deck[0][index].suit
@@ -78,7 +96,14 @@ class Table():
             card.set_z(cards_left)
             cards_left -= 1
 
-        card.show()
+
+
+    def draw_stock(self, stock_list):
+        range_num = len(stock_list)
+        if range_num == 0:
+            return 0
+        for a in range(range_num):
+            stock_list[a].show()
     
     
     def draw_waste(self, stock_list, waste_list):
@@ -87,6 +112,7 @@ class Table():
             range_num = 3
         else:
             range_num = len(stock_list)
+
         for a in range(range_num):
             x_loc = Screen().SCREENWIDTH - 60
             card = stock_list[0]
@@ -121,3 +147,4 @@ class Table():
     #             return True
 
 t = Table()
+t.create_stock()

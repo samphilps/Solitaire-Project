@@ -31,11 +31,20 @@ class Game():
             pygame.MOUSEBUTTONDOWN: m.notify_down,
             pygame.QUIT : self._quit_game
         }
-        Screen.screen.fill(Screen.SCREENCOLOR)
-        t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
+        
         
         # GAME LOOP -------------------------------------------
+        
+        t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
+
         while True:
+            Screen.screen.fill(Screen.SCREENCOLOR)
+
+            t.draw_foundation()
+            t.draw_tableau()
+            t.draw_stock(t.stock)
+            #t.draw_waste(t.stock, t.waste)
+            
             mouse_presses = pygame.mouse.get_pos()
             mouse_x = mouse_presses[0]
             mouse_y = mouse_presses[1]
@@ -44,7 +53,7 @@ class Game():
                 if event.type in func_dict:
                     func_dict[event.type]()
             
-            if click_num == 0:
+            if click_num != 0:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for a in range(len(d.deck)):
                         for b in range(len(d.deck[a])):
