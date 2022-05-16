@@ -68,15 +68,10 @@ class Game():
             if event.type == pygame.MOUSEBUTTONUP:
                 click_num = 0
                 
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_LEFT:
-            #         t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
-            #         t.reset_stock(t.stock, t.waste)
-
-            # for stack in range(len(d.deck)):
-            #     for c in range(len(d.deck[stack])):
-            #         pass
-            #         #d.deck[stack][c].show()
+            # keys=pygame.key.get_pressed()
+            # if keys[pygame.K_LEFT]:
+            #     t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
+            
             
             pygame.display.flip()
             Screen.clock.tick(Screen.FPS)
