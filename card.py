@@ -29,9 +29,12 @@ class Card():
     def __init__(self, suit, number, x_axis=0, y_axis=0, z_axis=0):
         self.suit = suit
         self.number = number
+        
         self.value = (suit, number)
         self._faceup_color = (240,240,200)
         self._suit_dict = {"spades" : "♠", "hearts" : "♥", "clubs" : "♣", "diamonds":"◆"}
+        self.list_pos = None
+        self.selected = False
         self.x = x_axis
         self.y = y_axis
         self.coords = (self.x, self.y)
@@ -47,7 +50,11 @@ class Card():
         self._corner_text = self.value[1]+self.value[0][0]
         self._facedown_color = (176,185,245)
         self._facedown_border = (40,40,190)
-        self._accent_color = (40,40,40) if self.value[0]=="clubs"or self.value[0]=="spades"else (190,40,40)
+        self._base_color = (40,40,40) if self.value[0]=="clubs"or self.value[0]=="spades"else (190,40,40)
+        self._highlight_color = (250,240,55)
+        self._accent_color = self._base_color
+         
+
         
         self._suit_text = self._suit_font.render(self._suit_dict[self.suit],True,self._accent_color)
         self._suit_textrect = self._suit_text.get_rect()

@@ -4,6 +4,7 @@ from components import *
 from card import *
 from layout import *
 
+
 class Game():
     def __init__(self):
         pygame.init()
@@ -15,7 +16,7 @@ class Game():
     
 
     def run(self):
-        click_num = 0
+        
         
         m = MouseCard()
         d = Deck()
@@ -36,7 +37,7 @@ class Game():
         # GAME LOOP -------------------------------------------
         
         t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
-        
+        click_num = 0
         while True:
             Screen.screen.fill(Screen.SCREENCOLOR)
 
@@ -80,7 +81,6 @@ class Game():
             # keys=pygame.key.get_pressed()
             # if keys[pygame.K_LEFT]:
             #     t.draw_screen(d.deck, t.foundation, t.tableau, t.stock, t.waste)
-            
             
             pygame.display.flip()
             Screen.clock.tick(Screen.FPS)
