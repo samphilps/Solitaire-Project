@@ -66,6 +66,7 @@ class Table():
                 x_loc += distance
                 self.tableau[j - range_num].append(card)
                 card.set_z(self.tableau[j - range_num].index(card))
+                
                 card.list_pos = "tableau"
                 
             
@@ -193,6 +194,7 @@ class Table():
                     card1.list_pos = str(card2.list_pos)
                     card1.x = float(card2.x)
                     card1.y = card2.y + 20
+                    card1.z = card2_list.index(card1)
 
         #-------------------------------
         card1.selected = False
